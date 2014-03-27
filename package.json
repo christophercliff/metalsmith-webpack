@@ -1,0 +1,46 @@
+{
+  "name": "metalsmith-webpack",
+  "version": "0.0.0",
+  "description": "A webpack plugin for Metalsmith",
+  "main": "./lib/",
+  "scripts": {
+    "test": "./node_modules/.bin/jshint ./lib/ ./test/ && ./node_modules/.bin/mocha --reporter spec"
+  },
+  "keywords": [
+    "metalsmith",
+    "javascript",
+    "webpack"
+  ],
+  "author": "Christopher Cliff <ctcliff@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/christophercliff/metalsmith-webpack"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "async": "^0.2.10",
+    "webpack": "^3.33.0"
+  },
+  "devDependencies": {
+    "assert-dir-equal": "^1.0.1",
+    "jshint": "^2.4.4",
+    "metalsmith": "^0.5.0",
+    "mocha": "^1.17.1"
+  },
+  "jshintConfig": {
+    "eqeqeq": true,
+    "immed": true,
+    "latedef": "nofunc",
+    "quotmark": "single",
+    "trailing": true,
+    "unused": true,
+    "asi": true,
+    "boss": true,
+    "expr": true,
+    "laxbreak": true,
+    "laxcomma": true,
+    "scripturl": true,
+    "sub": true,
+    "loopfunc": true
+  }
+}
