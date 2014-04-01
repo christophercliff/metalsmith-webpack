@@ -24,6 +24,17 @@ Metalsmith(__dirname)
 
 See the [`webpack configuration`][webpack configuration] documentation for details.
 
+## Example
+
+```js
+Metalsmith('test/fixtures/basic')
+  .use(webpack({
+    context: __dirname + '/src/js',
+    entry: './index.js'
+  }))
+  .build(done)
+```
+
 ## Tests
 
 ```
