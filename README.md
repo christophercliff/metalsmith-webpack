@@ -20,9 +20,13 @@ Metalsmith(__dirname)
   .build()
 ```
 
-### `config`
+### Config
 
-See the [`webpack configuration`][webpack configuration] documentation for details.
+Uses the [webpack configuration][webpack configuration] with a couple small differences:
+
+- [`output`][webpack output]
+
+    TODO
 
 ## Example
 
@@ -47,4 +51,5 @@ MIT License, see [LICENSE](https://github.com/christophercliff/metalsmith-webpac
 
 [webpack]: http://webpack.github.io/
 [webpack configuration]: http://webpack.github.io/docs/configuration.html
+[webpack output]: http://webpack.github.io/docs/configuration.html#output
 [metalsmith]: http://www.metalsmith.io/
