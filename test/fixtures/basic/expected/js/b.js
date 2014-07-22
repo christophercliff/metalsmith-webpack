@@ -1,1 +1,1 @@
-console.log('b')
+module.exports = [4, 5, 6]

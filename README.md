@@ -22,18 +22,24 @@ Metalsmith(__dirname)
 
 ### `config`
 
-See the [`webpack configuration`][webpack configuration] documentation for details.
+See the [webpack configuration][webpack configuration] documentation for details.
 
 ## Example
 
 ```js
-Metalsmith('test/fixtures/basic')
+Metalsmith(__dirname)
   .use(webpack({
-    context: __dirname + '/src/js',
-    entry: './index.js'
+    context: path.resolve(__dirname, './src/js/'),
+    entry: './index.js',
+    output: {
+      path: '/js',
+      filename: 'bundle.js'
+    }
   }))
-  .build(done)
+  .build()
 ```
+
+See the [tests][tests] for more examples.
 
 ## Tests
 
@@ -45,6 +51,7 @@ $ npm test
 
 MIT License, see [LICENSE](https://github.com/christophercliff/metalsmith-webpack/blob/master/LICENSE.md) for details.
 
+[metalsmith]: http://www.metalsmith.io/
+[tests]: https://github.com/christophercliff/metalsmith-webpack/blob/master/test/index.js
 [webpack]: http://webpack.github.io/
 [webpack configuration]: http://webpack.github.io/docs/configuration.html
-[metalsmith]: http://www.metalsmith.io/
