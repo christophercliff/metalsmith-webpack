@@ -16,11 +16,11 @@ npm install metalsmith-webpack
 var webpack = require('metalsmith-webpack')
 
 Metalsmith(__dirname)
-  .use(webpack(config))
+  .use(webpack(options))
   .build()
 ```
 
-### `config`
+### Options
 
 See the [webpack configuration][webpack configuration] documentation for details.
 
