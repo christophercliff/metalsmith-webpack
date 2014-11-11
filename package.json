@@ -18,15 +18,15 @@
     "test": "./node_modules/.bin/jshint ./lib/ ./test/ --exclude ./test/fixtures/ && ./node_modules/.bin/mocha -r should --reporter spec"
   },
   "dependencies": {
-    "enhanced-resolve": "~0.7.6",
-    "webpack": "~1.4.13"
+    "enhanced-resolve": "^0.7.6",
+    "webpack": "^1.4.13"
   },
   "devDependencies": {
     "assert-dir-equal": "^1.0.1",
-    "jshint": "^2.5.2",
-    "metalsmith": "~1.0.1",
-    "mocha": "~2.0.1",
-    "should": "^4.0.4"
+    "jshint": "^2.5.10",
+    "metalsmith": "^1.0.1",
+    "mocha": "^2.0.1",
+    "should": "^4.3.0"
   },
   "jshintConfig": {
     "eqeqeq": true,
