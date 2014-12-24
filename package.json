@@ -15,7 +15,8 @@
   "license": "MIT",
   "main": "./lib/",
   "scripts": {
-    "test": "./node_modules/.bin/jshint ./lib/ ./test/ --exclude ./test/fixtures/ && ./node_modules/.bin/mocha -r should --reporter spec"
+    "style": "./node_modules/.bin/crispy ./lib/ ./test/*.js",
+    "test": "npm run style && ./node_modules/.bin/mocha -r should --reporter spec"
   },
   "dependencies": {
     "enhanced-resolve": "^0.7.6",
@@ -23,25 +24,9 @@
   },
   "devDependencies": {
     "assert-dir-equal": "^1.0.1",
-    "jshint": "^2.5.10",
+    "crispy": "^2.0.0",
     "metalsmith": "^1.0.1",
     "mocha": "^2.0.1",
     "should": "^4.3.0"
-  },
-  "jshintConfig": {
-    "eqeqeq": true,
-    "immed": true,
-    "latedef": "nofunc",
-    "quotmark": "single",
-    "trailing": true,
-    "unused": true,
-    "asi": true,
-    "boss": true,
-    "expr": true,
-    "laxbreak": true,
-    "laxcomma": true,
-    "scripturl": true,
-    "sub": true,
-    "loopfunc": true
   }
 }

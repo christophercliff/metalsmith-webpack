@@ -3,10 +3,10 @@ var Metalsmith = require('metalsmith')
 var path = require('path')
 var webpack = require('../')
 
-describe('metalsmith-webpack', function(){
+describe('metalsmith-webpack', function () {
 
-    it('should pack basic', function(done){
-        Metalsmith('test/fixtures/basic')
+    it('should pack basic', function (done) {
+        (new Metalsmith('test/fixtures/basic'))
             .use(webpack({
                 context: path.resolve(__dirname, './fixtures/basic/src/js'),
                 entry: './index.js',
@@ -15,7 +15,7 @@ describe('metalsmith-webpack', function(){
                     filename: 'index.js'
                 }
             }))
-            .build(function(err, files){
+            .build(function (err, files) {
                 if (err) return done(err)
                 Object.keys(files).length.should.equal(3)
                 assertDir('test/fixtures/basic/expected', 'test/fixtures/basic/build')
@@ -23,8 +23,8 @@ describe('metalsmith-webpack', function(){
             })
     })
 
-    it('should pack complex', function(done){
-        Metalsmith('test/fixtures/complex')
+    it('should pack complex', function (done) {
+        (new Metalsmith('test/fixtures/complex'))
             .use(webpack({
                 context: path.resolve(__dirname, './fixtures/basic/src/js'),
                 entry: {
@@ -36,7 +36,7 @@ describe('metalsmith-webpack', function(){
                     filename: '[name]-bundle.js'
                 }
             }))
-            .build(function(err){
+            .build(function (err) {
                 if (err) return done(err)
                 assertDir('test/fixtures/basic/expected', 'test/fixtures/basic/build')
                 return done(null)
