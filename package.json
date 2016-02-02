@@ -1,6 +1,6 @@
 {
   "name": "metalsmith-webpack",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "A webpack plugin for Metalsmith",
   "keywords": [
     "metalsmith",
