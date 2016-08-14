@@ -26,18 +26,23 @@ See the [webpack configuration][webpack configuration] documentation for details
 
 ## Example
 
+We recommend to store your to be generated files (css, js, and so on) in a separate directory in sour `src` directory, i.e. `src/webpack`, that way you can easily generate all of them at once. We also recommend you to generate them into the `src` directory, i.e. to `src/assets/gen` that way they will be automatically picked up in future builds even if they are not re-compiled.
+
 ```js
 Metalsmith(__dirname)
   .use(webpack({
-    context: path.resolve(__dirname, './src/js/'),
-    entry: './index.js',
+    entry: {
+      index: './src/webpack/js/index.js'
+    },
     output: {
-      path: '/js',
-      filename: 'bundle.js'
-    }
+      path: __dirname + '/src/static/gen',
+      filename: '[name].js'
+    },
   }))
   .build()
 ```
+
+If you do not want the source files themselves to be included in the build itself, you can add ignore the path with the sources the webpack plugin call, i.e. with the given configuration `.ignore('webpack')`. That way your compiled files will show up, but not the sources.
 
 See the [tests][tests] for more examples.
 
