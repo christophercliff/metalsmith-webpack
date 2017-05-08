@@ -13,9 +13,14 @@
     "url": "http://github.com/christophercliff/metalsmith-webpack"
   },
   "license": "MIT",
-  "main": "./lib/",
+  "main": "dist",
   "scripts": {
-    "test": "mocha -r should --reporter spec"
+    "test": "mocha -r should --reporter spec",
+    "build": "npm run babel:node4 && npm run babel:node6",
+    "babel": "cross-env NODE_ENV=node6 babel lib -d dist",
+    "babel:watch": "cross-env NODE_ENV=node6 babel lib -d dist -w",
+    "babel:node4": "cross-env NODE_ENV=node4 babel lib -d dist/node4",
+    "babel:node6": "cross-env NODE_ENV=node6 babel lib -d dist"
   },
   "dependencies": {
     "debug": "^2.6.6",
@@ -24,7 +29,16 @@
   },
   "devDependencies": {
     "assert-dir-equal": "^1.0.1",
+    "babel-cli": "^6.16.0",
+    "babel-core": "^6.17.0",
     "babel-eslint": "^7.2.3",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-istanbul": "^2.0.1",
+    "babel-preset-es2015-node4": "^2.1.0",
+    "babel-preset-es2015-node6": "^0.3.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "babel-register": "^6.16.3",
+    "cross-env": "^4.0.0",
     "eslint": "^3.19.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-babel": "^4.1.1",

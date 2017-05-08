@@ -6,4 +6,5 @@ docs
 npm-debug.log
 .editorconfig
 
-dist
+lib
+test

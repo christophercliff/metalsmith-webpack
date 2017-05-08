@@ -2,7 +2,7 @@ var assertDir = require('assert-dir-equal')
 var Metalsmith = require('metalsmith')
 var eslint = require('mocha-eslint')
 var path = require('path')
-var webpack = require('../')
+var webpack = require('../dist')
 
 eslint(['test/*.js', 'lib'])
 
