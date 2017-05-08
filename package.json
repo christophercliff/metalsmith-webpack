@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "enhanced-resolve": "^0.7.6",
-    "webpack": "^1.4.13"
+    "webpack": "^2.5.1"
   },
   "devDependencies": {
     "assert-dir-equal": "^1.0.1",
