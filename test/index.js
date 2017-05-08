@@ -3,6 +3,7 @@ var Metalsmith = require('metalsmith')
 var eslint = require('mocha-eslint')
 var path = require('path')
 var webpack = require('../dist')
+var multimatch = require('multimatch')
 
 eslint(['test/*.js', 'lib'])
 
@@ -59,7 +60,8 @@ describe('metalsmith-webpack', function () {
     }))
     .build(function (err, files) {
       if (err) return done(err)
-      Object.keys(files).forEach(function (file) {
+      multimatch(Object.keys(files), ['**/a-bundle.js', '**/b-bundle.js']).forEach(function (file) {
+        console.log(file)
         files[file].should.be.an.instanceOf(Object).and.have.property('webpackStats')
         files[file].webpackStats.should.be.an.instanceOf(Object).and.have.property('hash')
       })
