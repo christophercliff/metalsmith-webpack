@@ -44,4 +44,26 @@ describe('metalsmith-webpack', function () {
         return done(null)
       })
   })
+    it('should add webpack stats', function (done) {
+        (new Metalsmith('test/fixtures/complex'))
+            .use(webpack({
+                context: path.resolve(__dirname, './fixtures/complex/src/js'),
+                entry: {
+                    a: './index-a.js',
+                    b: './index-b.js'
+                },
+                output: {
+                    path: path.resolve(__dirname, './fixtures/complex/build/js'),
+                    filename: '[name]-bundle.js'
+                }
+            }))
+            .build(function (err, files) {
+                if (err) return done(err)
+                Object.keys(files).forEach(function (file) {
+                    files[file].should.be.an.instanceOf(Object).and.have.property('webpackStats')
+                    files[file].webpackStats.should.be.an.instanceOf(Object).and.have.property('hash')
+                })
+                return done(null)
+            })
+    })
 })
