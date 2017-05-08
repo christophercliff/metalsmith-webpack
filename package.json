@@ -15,7 +15,7 @@
   "license": "MIT",
   "main": "dist",
   "scripts": {
-    "test": "mocha -r should --reporter spec",
+    "test": "npm run babel && mocha -r should --reporter spec",
     "build": "npm run babel:node4 && npm run babel:node6",
     "babel": "cross-env NODE_ENV=node6 babel lib -d dist",
     "babel:watch": "cross-env NODE_ENV=node6 babel lib -d dist -w",
