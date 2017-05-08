@@ -15,8 +15,7 @@
   "license": "MIT",
   "main": "./lib/",
   "scripts": {
-    "style": "./node_modules/.bin/crispy ./lib/ ./test/*.js",
-    "test": "npm run style && ./node_modules/.bin/mocha -r should --reporter spec"
+    "test": "mocha -r should --reporter spec"
   },
   "dependencies": {
     "enhanced-resolve": "^0.7.6",
@@ -24,9 +23,72 @@
   },
   "devDependencies": {
     "assert-dir-equal": "^1.0.1",
-    "crispy": "^2.0.0",
+    "babel-eslint": "^7.2.3",
+    "eslint": "^3.19.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-babel": "^4.1.1",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-node": "^4.2.2",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
     "metalsmith": "^1.0.1",
     "mocha": "^2.0.1",
+    "mocha-eslint": "^3.0.1",
+    "nyc": "^10.3.2",
     "should": "^4.3.0"
+  },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "extends": "standard",
+    "installedESLint": true,
+    "plugins": [
+      "standard",
+      "babel"
+    ],
+    "env": {
+      "node": true,
+      "mocha": true
+    }
+  },
+  "babel": {
+    "presets": [
+      "stage-0"
+    ],
+    "plugins": [
+      "add-module-exports"
+    ],
+    "env": {
+      "test": {
+        "presets": [
+          "es2015-node6"
+        ],
+        "plugins": [
+          "istanbul"
+        ]
+      },
+      "node4": {
+        "presets": [
+          "es2015-node4"
+        ]
+      },
+      "node6": {
+        "presets": [
+          "es2015-node6"
+        ]
+      }
+    }
+  },
+  "nyc": {
+    "include": [
+      "lib/**/*.js"
+    ],
+    "require": [
+      "babel-register"
+    ],
+    "sourceMap": false,
+    "instrument": false
+  },
+  "directories": {
+    "test": "test"
   }
 }
