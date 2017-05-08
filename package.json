@@ -18,6 +18,7 @@
     "test": "mocha -r should --reporter spec"
   },
   "dependencies": {
+    "debug": "^2.6.6",
     "enhanced-resolve": "^0.7.6",
     "webpack": "^2.5.1"
   },
