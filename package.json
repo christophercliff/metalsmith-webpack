@@ -25,6 +25,7 @@
   "dependencies": {
     "debug": "^2.6.6",
     "memory-fs": "^0.4.1",
+    "vow": "^0.4.15",
     "webpack": "^2.5.1"
   },
   "devDependencies": {
@@ -46,7 +47,7 @@
     "eslint-plugin-node": "^4.2.2",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
-    "metalsmith": "^1.0.1",
+    "metalsmith": "^2.3.0",
     "mocha": "^2.0.1",
     "mocha-eslint": "^3.0.1",
     "multimatch": "^2.1.0",

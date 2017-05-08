@@ -11,12 +11,15 @@ describe('metalsmith-webpack', function () {
   it('should pack basic', function (done) {
     (new Metalsmith('test/fixtures/basic'))
       .use(webpack({
-        context: path.resolve(__dirname, './fixtures/basic/src/js'),
-        entry: './index.js',
-        output: {
-          path: path.resolve(__dirname, './fixtures/basic/build/js'),
-          filename: 'bundle.js'
-        }
+        config: {
+          context: path.resolve(__dirname, './fixtures/basic/src/js'),
+          entry: './index.js',
+          output: {
+            path: path.resolve(__dirname, './fixtures/basic/build/js'),
+            filename: 'bundle.js'
+          }
+        },
+        stats: { chunks: false }
       }))
       .build(function (err, files) {
         if (err) return done(err)
