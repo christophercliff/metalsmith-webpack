@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "debug": "^2.6.6",
-    "enhanced-resolve": "^0.7.6",
+    "memory-fs": "^0.4.1",
     "webpack": "^2.5.1"
   },
   "devDependencies": {
