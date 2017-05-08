@@ -26,7 +26,7 @@ See the [webpack configuration][webpack configuration] documentation for details
 
 ## Example
 
-We recommend to store your to be generated files (css, js, and so on) in a separate directory in sour `src` directory, i.e. `src/webpack`, that way you can easily generate all of them at once. We also recommend you to generate them into the `src` directory, i.e. to `src/assets/gen` that way they will be automatically picked up in future builds even if they are not re-compiled.
+We recommend to store your to be generated files (css, js, and so on) in a separate directory in sour `src` directory, i.e. `src/webpack`, that way you can easily generate all of them at once. We also recommend you to generate them into the `src` directory, i.e. to `src/assets/gen` that way they will end up in the right place in the webpack build, although they will not appear on the filesystem itself, as the results are only stored in memory.
 
 ```js
 Metalsmith(__dirname)
