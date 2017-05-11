@@ -1,9 +1,14 @@
-var assertDir = require('assert-dir-equal')
-var Metalsmith = require('metalsmith')
-var eslint = require('mocha-eslint')
-var path = require('path')
-var webpack = require('../dist').default
-var multimatch = require('multimatch')
+import assertDir from 'assert-dir-equal'
+import Metalsmith from 'metalsmith'
+import eslint from 'mocha-eslint'
+import {
+  resolve
+} from 'path'
+import webpack from '../dist'
+import {
+  // writeFileSync as write,
+  readFileSync as read
+} from 'fs'
 
 eslint(['test/*.js', 'lib'])
 
@@ -12,10 +17,10 @@ describe('metalsmith-webpack', function () {
     (new Metalsmith('test/fixtures/basic'))
       .use(webpack({
         config: {
-          context: path.resolve(__dirname, './fixtures/basic/src/js'),
+          context: resolve(__dirname, './fixtures/basic/src/js'),
           entry: './index.js',
           output: {
-            path: path.resolve(__dirname, './fixtures/basic/build/js'),
+            path: resolve(__dirname, './fixtures/basic/build/js'),
             filename: 'bundle.js'
           }
         },
@@ -32,13 +37,13 @@ describe('metalsmith-webpack', function () {
   it('should pack complex', function (done) {
     (new Metalsmith('test/fixtures/complex'))
       .use(webpack({
-        context: path.resolve(__dirname, './fixtures/complex/src/js'),
+        context: resolve(__dirname, './fixtures/complex/src/js'),
         entry: {
           a: './index-a.js',
           b: './index-b.js'
         },
         output: {
-          path: path.resolve(__dirname, './fixtures/complex/build/js'),
+          path: resolve(__dirname, './fixtures/complex/build/js'),
           filename: '[name]-bundle.js'
         }
       }))
@@ -48,27 +53,36 @@ describe('metalsmith-webpack', function () {
         return done(null)
       })
   })
-  it('should add webpack stats', function (done) {
+  it('should create meta structure', function (done) {
     (new Metalsmith('test/fixtures/complex'))
     .use(webpack({
-      context: path.resolve(__dirname, './fixtures/complex/src/js'),
+      context: resolve(__dirname, './fixtures/meta/src/js'),
       entry: {
         a: './index-a.js',
         b: './index-b.js'
       },
       output: {
-        path: path.resolve(__dirname, './fixtures/complex/build/js'),
+        path: resolve(__dirname, './fixtures/meta/build/js'),
         filename: '[name]-bundle.js'
       }
     }))
+    .use((files, metalsmith) => {
+      const fixturePath = resolve(__dirname, './fixtures/meta/meta.json')
+      // dump meta to refresh fixture
+      // write(
+      //   fixturePath,
+      //   JSON.stringify(metalsmith.metadata().webpack.assets)
+      // )
+      const meta = metalsmith.metadata().webpack
+      meta.should.have.property('stats')
+      meta.should.have.property('assets')
+      meta.assets.should.deepEqual(
+        JSON.parse(read(fixturePath))
+      )
+    })
     .build(function (err, files) {
-      if (err) return done(err)
-      multimatch(Object.keys(files), ['**/a-bundle.js', '**/b-bundle.js']).forEach(function (file) {
-        console.log(file)
-        files[file].should.be.an.instanceOf(Object).and.have.property('webpackStats')
-        files[file].webpackStats.should.be.an.instanceOf(Object).and.have.property('hash')
-      })
-      return done(null)
+      if (err) throw err
+      done(null)
     })
   })
 })

@@ -20,7 +20,9 @@
     "babel": "cross-env NODE_ENV=node6 babel lib -d dist",
     "babel:watch": "cross-env NODE_ENV=node6 babel lib -d dist -w",
     "babel:node4": "cross-env NODE_ENV=node4 babel lib -d dist/node4",
-    "babel:node6": "cross-env NODE_ENV=node6 babel lib -d dist"
+    "babel:node6": "cross-env NODE_ENV=node6 babel lib -d dist",
+    "test": "cross-env NODE_ENV=test mocha -r should --reporter spec --compilers js:babel-register test",
+    "test:watch": "cross-env NODE_ENV=test mocha -r should --reporter spec --compilers js:babel-register --watch test"
   },
   "dependencies": {
     "debug": "^2.6.6",
@@ -52,7 +54,7 @@
     "mocha-eslint": "^3.0.1",
     "multimatch": "^2.1.0",
     "nyc": "^10.3.2",
-    "should": "^4.3.0"
+    "should": "^11.0.0"
   },
   "eslintConfig": {
     "parser": "babel-eslint",
