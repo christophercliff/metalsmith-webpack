@@ -15,18 +15,18 @@
   "license": "MIT",
   "main": "dist",
   "scripts": {
-    "test": "npm run babel && mocha -r should --reporter spec",
+    "test": "cross-env NODE_ENV=test mocha -r should --reporter spec --compilers js:babel-register test",
     "build": "npm run babel:node4 && npm run babel:node6",
     "babel": "cross-env NODE_ENV=node6 babel lib -d dist",
     "babel:watch": "cross-env NODE_ENV=node6 babel lib -d dist -w",
     "babel:node4": "cross-env NODE_ENV=node4 babel lib -d dist/node4",
     "babel:node6": "cross-env NODE_ENV=node6 babel lib -d dist",
-    "test": "cross-env NODE_ENV=test mocha -r should --reporter spec --compilers js:babel-register test",
     "test:watch": "cross-env NODE_ENV=test mocha -r should --reporter spec --compilers js:babel-register --watch test"
   },
   "dependencies": {
     "debug": "^2.6.6",
     "memory-fs": "^0.4.1",
+    "murmurhash3js": "^3.0.1",
     "vow": "^0.4.15",
     "webpack": "^2.5.1"
   },
@@ -49,12 +49,14 @@
     "eslint-plugin-node": "^4.2.2",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
+    "lokijs": "^1.4.3",
     "metalsmith": "^2.3.0",
     "mocha": "^2.0.1",
     "mocha-eslint": "^3.0.1",
     "multimatch": "^2.1.0",
     "nyc": "^10.3.2",
-    "should": "^11.0.0"
+    "should": "^11.0.0",
+    "underscore": "^1.8.3"
   },
   "eslintConfig": {
     "parser": "babel-eslint",

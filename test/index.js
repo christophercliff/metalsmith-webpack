@@ -4,7 +4,10 @@ import eslint from 'mocha-eslint'
 import {
   resolve
 } from 'path'
-import webpack from '../dist'
+import {
+  default as webpack,
+  cache as webpackCache
+} from '../lib'
 import {
   // writeFileSync as write,
   readFileSync as read
@@ -54,7 +57,7 @@ describe('metalsmith-webpack', function () {
       })
   })
   it('should create meta structure', function (done) {
-    (new Metalsmith('test/fixtures/complex'))
+    (new Metalsmith('test/fixtures/meta'))
     .use(webpack({
       context: resolve(__dirname, './fixtures/meta/src/js'),
       entry: {
@@ -79,6 +82,68 @@ describe('metalsmith-webpack', function () {
       meta.assets.should.deepEqual(
         JSON.parse(read(fixturePath))
       )
+    })
+    .build(function (err, files) {
+      if (err) throw err
+      done(null)
+    })
+  })
+  it('should cache results', (done) => {
+    let files = webpackCache.getCollection('files')
+    let modTimes = webpackCache.getCollection('webpackModTimes')
+    files.clear()
+    modTimes.clear()
+    files.count().should.eql(0)
+    modTimes.count().should.eql(0)
+
+    new Metalsmith('test/fixtures/createCache')
+    .use(webpack(
+      {
+        context: resolve(__dirname, './fixtures/meta/src/js'),
+        entry: {
+          a: './index-a.js',
+          b: './index-b.js'
+        },
+        output: {
+          path: resolve(__dirname, './fixtures/meta/build/js'),
+          filename: '[name]-bundle.js'
+        }
+      },
+      '**/*.js'
+    ))
+    .use(() => {
+      webpackCache.loadDatabase(() => {
+        files = webpackCache.getCollection('files')
+        modTimes = webpackCache.getCollection('webpackModTimes')
+
+        files.count().should.eql(2)
+        modTimes.count().should.eql(4)
+      })
+    })
+    .build(function (err, files) {
+      if (err) throw err
+      done(null)
+    })
+  })
+  it('should skip build with cache', (done) => {
+    new Metalsmith('test/fixtures/createCache')
+    .use(webpack(
+      {
+        context: resolve(__dirname, './fixtures/meta/src/js'),
+        entry: {
+          a: './index-a.js',
+          b: './index-b.js'
+        },
+        output: {
+          path: resolve(__dirname, './fixtures/meta/build/js'),
+          filename: '[name]-bundle.js'
+        }
+      },
+      '**/*.js'
+    ))
+    .use((files, metalsmith) => {
+      const meta = metalsmith.metadata().webpack
+      meta.stats.fromCache.should.eql(true)
     })
     .build(function (err, files) {
       if (err) throw err
