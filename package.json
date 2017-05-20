@@ -26,6 +26,7 @@
   "dependencies": {
     "debug": "^2.6.6",
     "memory-fs": "^0.4.1",
+    "metalsmith-cache": "git://github.com/leviwheatcroft/metalsmith-cache.git",
     "murmurhash3js": "^3.0.1",
     "vow": "^0.4.15",
     "webpack": "^2.5.1"
