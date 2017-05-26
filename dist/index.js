@@ -38,8 +38,9 @@ const dbg = (0, _debug2.default)('metalsmith-webpack');
 //   readFile
 // } from 'fs'
 
-const modTimes = (0, _metalsmithCache.getStore)('webpackModTimes');
-const persist = (0, _metalsmithCache.getStore)('metalsmith-cache');
+const modTimes = new _metalsmithCache.ValueCache('webpack-mod-times');
+const persist = new _metalsmithCache.ValueCache('webpack-values');
+const fileCache = new _metalsmithCache.FileCache('webpack-files');
 
 exports.cache = _metalsmithCache.loki;
 
@@ -61,19 +62,18 @@ function plugin(options = 'webpack.config.js', dependencies) {
     if (!Array.isArray(options.config)) options.config = [options.config];
 
     if (options.clearCache) {
-      modTimes.clear();
-      _metalsmithCache.files.clear();
-      persist.clear();
+      modTimes.collection.clear();
+      fileCache.collection.clear();
+      persist.collection.clear();
     }
-
     fromCache = true;
 
-    return _vow2.default.resolve().then(() => (0, _metalsmithCache.init)()).then(() => validateCache(dependencies, files)).catch(() => transpile(options, metalsmith)).then(() => populate(files, metalsmith)).catch(dbg).then(() => (0, _metalsmithCache.save)());
+    return _vow2.default.resolve().then(() => (0, _metalsmithCache.init)()).then(() => validateCache(dependencies, files)).catch(reason => transpile(reason, options, metalsmith)).then(() => populate(files, metalsmith)).catch(dbg).then(() => (0, _metalsmithCache.save)());
   };
 }
 
 function validateCache(dependencies, files) {
-  if (!dependencies) return _vow2.default.reject(); // must transpile
+  if (!dependencies) return _vow2.default.reject('no dependencies specified');
 
   dependencies = [].concat(dependencies);
   let results = (0, _multimatch2.default)(Object.keys(files), dependencies).map(file => {
@@ -83,15 +83,14 @@ function validateCache(dependencies, files) {
     modTimes.store(file, current);
     return true;
   });
-  if (results.includes(true)) return _vow2.default.reject();
-  if (results.length === 0) {
-    dbg('your dependencies mask didnt match any files, build forced');
-    dbg(dependencies);
-    return _vow2.default.reject();
-  }
+  if (results.includes(true)) return _vow2.default.reject('dependencies changed');
+  if (results.length === 0) return _vow2.default.reject('dependencies matched 0 files');
+  dbg('cache valid, skipping transpile');
   return _vow2.default.resolve();
 }
-function transpile(options, metalsmith) {
+function transpile(reason, options, metalsmith) {
+  dbg(`cache invalid (will transpile): ${reason}`);
+
   const compiler = (0, _webpack2.default)(options.config);
   const fs = new _memoryFs2.default();
   compiler.outputFileSystem = fs;
@@ -130,7 +129,7 @@ function transpile(options, metalsmith) {
           // buildPath (relative) path to asset as it will be stored in ms
           const buildPath = (0, _path.relative)(metalsmith.destination(), fullPath);
           // store file in cache
-          _metalsmithCache.files.store(buildPath, { contents: fs.readFileSync(fullPath) });
+          fileCache.store(buildPath, { contents: fs.readFileSync(fullPath) });
           // store buildPath
           assetsByChunkName[chunkName].push(buildPath);
         });
@@ -145,7 +144,7 @@ function populate(files, metalsmith) {
   const assetsByChunkName = persist.retrieve('assetsByChunkName');
   Object.values(assetsByChunkName).forEach(assets => {
     assets.forEach(asset => {
-      files[asset] = _metalsmithCache.files.retrieve(asset);
+      files[asset] = fileCache.retrieve(asset);
     });
   });
 
