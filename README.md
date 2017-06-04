@@ -37,7 +37,7 @@ from the command line.
 Metalsmith(__dirname)
 .use(webpack({
   entry: {
-    site: './src/js/site.js',
+    site: resolve(__dirname, 'src', 'js', 'site.js'),
   },
   output: {
     path: resolve(__dirname, 'build', 'js'),
@@ -47,13 +47,15 @@ Metalsmith(__dirname)
 .build()
 ```
 
+*Note*: It's important that absolute paths are provided to webpack, as is normal webpack behaviour. That means including your `src` and `build` directories as demonstrated above.
+
 This example uses an asset's hash in it's filename (fingerprinting / cache busting). The filename for this asset will be stored in metalsmith meta, so you could access it from a template with something like:
 
 `<script src="{{webpack.assets['site']}}"></script>`
 
 This plugin will not ignore source files, you should use [metalsmith-ignore][metalsmith-ignore] for that
 
-See the [tests][tests] for more examples.
+See the [tests][tests] for more examples, or [metalsmith-all-the-things][metalsmith-all-the-things] for a full implementation.
 
 ## Tests
 
@@ -78,3 +80,4 @@ MIT License, see [LICENSE](https://github.com/christophercliff/metalsmith-webpac
 [metalsmith-ignore]: https://github.com/segmentio/metalsmith-ignore
 [metalsmith-webpack-dev-server]: https://github.com/okonet/metalsmith-webpack-dev-server
 [metalsmith-webpack-suite]: https://github.com/axe312ger/metalsmith-webpack-suite
+[metalsmith-all-the-things]: https://github.com/leviwheatcroft/metalsmith-all-the-things

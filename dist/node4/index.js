@@ -52,7 +52,10 @@ let fromCache;
  *
  * @param {Object} options webpack options
  */
-function plugin(options = 'webpack.config.js', dependencies) {
+function plugin() {
+  let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'webpack.config.js';
+  let dependencies = arguments[1];
+
   return function (files, metalsmith) {
     // deal with options inside plugin so we have access to metalsmith
     if (typeof options === 'string' || options.config === undefined) options = { config: options };
@@ -164,7 +167,7 @@ function populate(files, metalsmith) {
   Object.keys(assetsByChunkName).forEach(chunkName => {
     assets[chunkName] = (0, _path.join)(_path.sep, assetsByChunkName[chunkName].slice(-1).join());
   });
-  meta.webpack = { stats, assets };
+  meta.webpack = { stats: stats, assets: assets };
 
   // show plugin users the standard webpack stats
   dbg(persist.retrieve('statsDisplay'));
@@ -177,8 +180,12 @@ function populate(files, metalsmith) {
  * wrap fn with promise.. should probably use some package
  */
 function promisify(fn) {
-  return function (...args) {
+  return function () {
     const defer = _vow2.default.defer();
+
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
 
     args.push((err, result) => {
       if (err) return defer.reject(err);
