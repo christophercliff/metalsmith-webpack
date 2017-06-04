@@ -34,13 +34,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 const dbg = (0, _debug2.default)('metalsmith-webpack');
 
-// import {
-//   readFile
-// } from 'fs'
+let modTimes = false;
+let persist = false;
+let fileCache = false;
 
-const modTimes = new _metalsmithCache.ValueCache('webpack-mod-times');
-const persist = new _metalsmithCache.ValueCache('webpack-values');
-const fileCache = new _metalsmithCache.FileCache('webpack-files');
+// this structure ensures db is loaded before getting / adding collections
+(0, _metalsmithCache.init)().then(() => {
+  modTimes = new _metalsmithCache.ValueCache('webpack-mod-times');
+  persist = new _metalsmithCache.ValueCache('webpack-values');
+  fileCache = new _metalsmithCache.FileCache('webpack-files');
+});
 
 exports.cache = _metalsmithCache.loki;
 
@@ -142,11 +145,8 @@ function transpile(reason, options, metalsmith) {
 
 function populate(files, metalsmith) {
   const assetsByChunkName = persist.retrieve('assetsByChunkName');
-  dbg('assets');
-  dbg(assetsByChunkName);
   Object.values(assetsByChunkName).forEach(assets => {
     assets.forEach(asset => {
-      dbg('toMs: ', asset);
       files[asset] = fileCache.retrieve(asset);
     });
   });

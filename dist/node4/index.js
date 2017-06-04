@@ -145,11 +145,8 @@ function transpile(reason, options, metalsmith) {
 
 function populate(files, metalsmith) {
   const assetsByChunkName = persist.retrieve('assetsByChunkName');
-  dbg('assets');
-  dbg(assetsByChunkName);
   Object.values(assetsByChunkName).forEach(assets => {
     assets.forEach(asset => {
-      dbg('toMs: ', asset);
       files[asset] = fileCache.retrieve(asset);
     });
   });
