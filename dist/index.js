@@ -77,6 +77,9 @@ function plugin(options = 'webpack.config.js', dependencies) {
 
 function validateCache(dependencies, files) {
   if (!dependencies) return _vow2.default.reject('no dependencies specified');
+  if (process.env.NODE_ENV === 'production') {
+    return _vow2.default.reject('production build');
+  }
 
   dependencies = [].concat(dependencies);
   let results = (0, _multimatch2.default)(Object.keys(files), dependencies).map(file => {
@@ -99,6 +102,8 @@ function transpile(reason, options, metalsmith) {
   compiler.outputFileSystem = fs;
 
   fromCache = false;
+
+  fileCache.collection.clear();
 
   return promisify(compiler.run.bind(compiler))().then(stats => {
     if (stats.hasErrors()) throw new Error(stats);
