@@ -5,18 +5,30 @@ import {
   resolve
 } from 'path'
 import {
-  default as webpack,
-  cache as webpackCache
+  default as webpack
 } from '../lib'
 import {
   // writeFileSync as write,
-  readFileSync as read
+  readFileSync as read,
+  unlinkSync as unlink
 } from 'fs'
+import assert from 'assert'
+import debug from 'debug'
 
 eslint(['test/*.js', 'lib'])
 
+const dbg = debug('metalsmith-webpack')
+
 describe('metalsmith-webpack', function () {
-  it('should pack basic', function (done) {
+  // clean up
+  after((done) => {
+    unlink('cache/webpack-files.db')
+    unlink('cache/webpack-mod-times-values.db')
+    unlink('cache/webpack-values.db')
+    done()
+  })
+
+  it('should pack (basic config)', function (done) {
     (new Metalsmith('test/fixtures/basic'))
       .use(webpack({
         config: {
@@ -29,9 +41,13 @@ describe('metalsmith-webpack', function () {
         },
         stats: { chunks: false }
       }))
+      .use((files) => {
+        // dbg(files)
+      })
       .build(function (err, files) {
         if (err) return done(err)
-        Object.keys(files).length.should.equal(4)
+        dbg(Object.keys(files))
+        assert.equal(Object.keys(files).length, 4)
         assertDir('test/fixtures/basic/expected', 'test/fixtures/basic/build')
         return done(null)
       })
@@ -77,55 +93,18 @@ describe('metalsmith-webpack', function () {
       //   JSON.stringify(metalsmith.metadata().webpack.assets)
       // )
       const meta = metalsmith.metadata().webpack
-      meta.should.have.property('stats')
-      meta.should.have.property('assets')
-      meta.assets.should.deepEqual(
-        JSON.parse(read(fixturePath))
-      )
+      assert.ok(meta.stats)
+      assert.ok(meta.assets)
+      assert.deepEqual(meta.assets, JSON.parse(read(fixturePath)))
     })
     .build(function (err, files) {
       if (err) throw err
       done(null)
     })
   })
-  it('should cache results', (done) => {
-    let files = webpackCache.getCollection('files')
-    let modTimes = webpackCache.getCollection('webpackModTimes')
-    files.clear()
-    modTimes.clear()
-    files.count().should.eql(0)
-    modTimes.count().should.eql(0)
 
-    new Metalsmith('test/fixtures/createCache')
-    .use(webpack(
-      {
-        context: resolve(__dirname, './fixtures/meta/src/js'),
-        entry: {
-          a: './index-a.js',
-          b: './index-b.js'
-        },
-        output: {
-          path: resolve(__dirname, './fixtures/meta/build/js'),
-          filename: '[name]-bundle.js'
-        }
-      },
-      '**/*.js'
-    ))
-    .use(() => {
-      webpackCache.loadDatabase(() => {
-        files = webpackCache.getCollection('files')
-        modTimes = webpackCache.getCollection('webpackModTimes')
-
-        files.count().should.eql(2)
-        modTimes.count().should.eql(4)
-      })
-    })
-    .build(function (err, files) {
-      if (err) throw err
-      done(null)
-    })
-  })
   it('should skip build with cache', (done) => {
+    // make cache
     new Metalsmith('test/fixtures/createCache')
     .use(webpack(
       {
@@ -141,13 +120,33 @@ describe('metalsmith-webpack', function () {
       },
       '**/*.js'
     ))
-    .use((files, metalsmith) => {
-      const meta = metalsmith.metadata().webpack
-      meta.stats.fromCache.should.eql(true)
-    })
-    .build(function (err, files) {
-      if (err) throw err
-      done(null)
+    .build((err) => {
+      if (err) return done(err)
+
+      // use cache
+      new Metalsmith('test/fixtures/createCache')
+      .use(webpack(
+        {
+          context: resolve(__dirname, './fixtures/meta/src/js'),
+          entry: {
+            a: './index-a.js',
+            b: './index-b.js'
+          },
+          output: {
+            path: resolve(__dirname, './fixtures/meta/build/js'),
+            filename: '[name]-bundle.js'
+          }
+        },
+        '**/*.js'
+      ))
+      .use((files, metalsmith) => {
+        const meta = metalsmith.metadata().webpack
+        assert.ok(meta.stats.fromCache)
+      })
+      .build(function (err, files) {
+        if (err) throw err
+        done(null)
+      })
     })
   })
 })
